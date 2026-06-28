@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodBridge — Project Folder Structure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red-50: #fef2f2;
+            --red-100: #fee2e2;
+            --red-200: #fecaca;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --red-700: #b91c1c;
+            --red-800: #991b1b;
+            --red-900: #7f1d1d;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --green-500: #22c55e;
+            --purple-500: #a855f7;
+            --orange-500: #f97316;
+            --yellow-500: #eab308;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #ffffff;
+            color: var(--gray-800);
+            line-height: 1.6;
+            font-size: 11pt;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 50px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid var(--red-600);
+        }
+
+        .header-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 28pt;
+            font-weight: 800;
+            color: var(--red-700);
+            letter-spacing: -0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 12pt;
+            color: var(--gray-500);
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .header .meta {
+            font-size: 9pt;
+            color: var(--gray-400);
+            margin-top: 10px;
+        }
+
+        /* Section headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .section-header .icon {
+            font-size: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 15pt;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .section-header .path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9pt;
+            background: var(--gray-100);
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--gray-600);
+        }
+
+        .section-desc {
+            font-size: 10pt;
+            color: var(--gray-600);
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        /* Folder cards */
+        .folder-grid {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .folder-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .folder-card .folder-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5pt;
+            font-weight: 500;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .folder-card .folder-desc {
+            padding: 10px 14px;
+            font-size: 9.5pt;
+            color: var(--gray-700);
+            border-left: 1px solid var(--gray-200);
+        }
+
+        .folder-card .folder-desc .files {
+            font-size: 8.5pt;
+            color: var(--gray-500);
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Color variants for folder names */
+        .bg-red { background: var(--red-50); color: var(--red-800); }
+        .bg-blue { background: #eff6ff; color: #1e40af; }
+        .bg-green { background: #f0fdf4; color: #166534; }
+        .bg-purple { background: #faf5ff; color: #6b21a8; }
+        .bg-orange { background: #fff7ed; color: #9a3412; }
+        .bg-yellow { background: #fefce8; color: #854d0e; }
+        .bg-gray { background: var(--gray-100); color: var(--gray-700); }
+
+        /* Pipeline flow */
+        .pipeline-flow {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9pt;
+            line-height: 2;
+            page-break-inside: avoid;
+        }
+
+        .pipeline-flow .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pipeline-flow .arrow {
+            color: var(--red-500);
+            font-weight: 700;
+            margin-left: 20px;
+        }
+
+        .pipeline-flow .label {
+            color: var(--gray-500);
+            font-family: 'Inter', sans-serif;
+            font-size: 8.5pt;
+        }
+
+        /* Table styles */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 9.5pt;
+        }
+
+        .info-table th {
+            background: var(--gray-800);
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 9pt;
+        }
+
+        .info-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .info-table tr:nth-child(even) td {
+            background: var(--gray-50);
+        }
+
+        .info-table code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5pt;
+            background: var(--gray-100);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        /* Tree view */
+        .tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9pt;
+            line-height: 1.8;
+            background: var(--gray-900);
+            color: #e2e8f0;
+            padding: 20px 25px;
+            border-radius: 10px;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        .tree .dir { color: #60a5fa; font-weight: 500; }
+        .tree .file { color: #a5b4fc; }
+        .tree .comment { color: #6b7280; }
+        .tree .highlight { color: #f97316; }
+
+        /* Callout box */
+        .callout {
+            border-left: 4px solid var(--red-500);
+            background: var(--red-50);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+
+        .callout strong {
+            color: var(--red-700);
+        }
+
+        /* IO block */
+        .io-block {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 8px;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 9pt;
+        }
+
+        .io-box {
+            font-family: 'JetBrains Mono', monospace;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 8.5pt;
+        }
+
+        .io-in { background: #dbeafe; color: #1e40af; }
+        .io-out { background: #dcfce7; color: #166534; }
+        .io-arrow { font-size: 16pt; color: var(--gray-400); text-align: center; }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 2px solid var(--gray-200);
+            text-align: center;
+            font-size: 9pt;
+            color: var(--gray-400);
+        }
+
+        /* Page break hints */
+        .page-break { page-break-before: always; }
+
+        /* Print styles */
+        @media print {
+            body { font-size: 10pt; }
+            .container { padding: 20px 30px; }
+            .header { margin-bottom: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-icon">🩸</div>
+            <h1>BloodBridge</h1>
+            <div class="subtitle">AI-Powered Emergency Blood Matching System</div>
+            <div class="subtitle" style="font-size: 11pt; font-weight: 600; color: #b91c1c; margin-top: 8px;">Project Folder Structure & Architecture Guide</div>
+            <div class="meta">Kartik Tewari &nbsp;|&nbsp; June 2026 &nbsp;|&nbsp; NLP • Transformers • ML • Deep Learning</div>
+        </div>
+
+        <!-- HIGH LEVEL TREE -->
+        <div class="tree">
+            <span class="dir">bloodbridge/</span><br>
+            ├── <span class="dir">backend/</span> <span class="comment">── Python: FastAPI + ML Pipeline</span><br>
+            │&nbsp;&nbsp;&nbsp;├── <span class="dir">app/</span> <span class="comment">──── Web server (routes, schemas, services, db)</span><br>
+            │&nbsp;&nbsp;&nbsp;├── <span class="dir">ml/</span> <span class="comment">───── AI brain (5 pipeline stages)</span><br>
+            │&nbsp;&nbsp;&nbsp;├── <span class="dir">models/</span> <span class="comment">── Saved model weights (.pt, .bin)</span><br>
+            │&nbsp;&nbsp;&nbsp;└── <span class="dir">tests/</span> <span class="comment">─── Unit tests</span><br>
+            ├── <span class="dir">frontend/</span> <span class="comment">── React + TypeScript: User Interface</span><br>
+            │&nbsp;&nbsp;&nbsp;└── <span class="dir">src/</span> <span class="comment">───── pages, components, hooks, services, styles</span><br>
+            ├── <span class="dir">data/</span> <span class="comment">────── Datasets (raw → processed → annotated)</span><br>
+            ├── <span class="dir">notebooks/</span> <span class="comment">─ Jupyter experiments & EDA</span><br>
+            ├── <span class="dir">configs/</span> <span class="comment">─── YAML hyperparameters & settings</span><br>
+            ├── <span class="dir">docker/</span> <span class="comment">──── Dockerfiles for deployment</span><br>
+            └── <span class="dir">docs/</span> <span class="comment">────── Architecture docs & results</span>
+        </div>
+
+        <!-- DATA FLOW -->
+        <div class="pipeline-flow">
+            <strong style="color: #dc2626;">End-to-End Data Flow:</strong><br><br>
+            <div class="step">📱 User types message on <strong>frontend/</strong></div>
+            <div class="arrow">↓</div>
+            <div class="step">🌐 <strong>backend/app/api/</strong> receives HTTP request</div>
+            <div class="arrow">↓</div>
+            <div class="step">⚙️ <strong>backend/app/services/</strong> orchestrates the pipeline call</div>
+            <div class="arrow">↓</div>
+            <div class="step">🧹 <strong>backend/ml/preprocessing/</strong> → cleans text</div>
+            <div class="arrow">↓</div>
+            <div class="step">🚨 <strong>backend/ml/triage/</strong> → classifies urgency (P0–P3)</div>
+            <div class="arrow">↓</div>
+            <div class="step">🏷️ <strong>backend/ml/ner/</strong> → extracts blood group, hospital, etc.</div>
+            <div class="arrow">↓</div>
+            <div class="step">🎯 <strong>backend/ml/matching/</strong> → finds & ranks nearby donors</div>
+            <div class="arrow">↓</div>
+            <div class="step">📲 Response → <strong>frontend/</strong> shows urgency + donors on map</div>
+        </div>
+
+
+        <!-- ======================== BACKEND APP ======================== -->
+        <div class="page-break"></div>
+
+        <div class="section-header">
+            <span class="icon">🔧</span>
+            <h2>Backend — API Server</h2>
+            <span class="path">backend/app/</span>
+        </div>
+        <p class="section-desc">The FastAPI web server. Receives requests from the frontend, calls the ML pipeline, returns JSON responses.</p>
+
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-red">📂 api/</div>
+                <div class="folder-desc">
+                    <strong>Route Handlers</strong> — One file per group of API endpoints.
+                    <div class="files">routes_request.py, routes_donor.py, routes_forecast.py, routes_health.py</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-blue">📂 schemas/</div>
+                <div class="folder-desc">
+                    <strong>Data Shapes</strong> — Pydantic models defining exact structure of API input/output.
+                    <div class="files">request.py, donor.py, forecast.py</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-green">📂 services/</div>
+                <div class="folder-desc">
+                    <strong>Business Logic</strong> — Orchestrates ML pipeline calls. The "kitchen manager."
+                    <div class="files">request_service.py, donor_service.py, forecast_service.py</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-purple">📂 db/</div>
+                <div class="folder-desc">
+                    <strong>Database Layer</strong> — SQLAlchemy connection + ORM table definitions.
+                    <div class="files">database.py, models.py</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <th>API Endpoint</th>
+                <th>File</th>
+                <th>What It Does</th>
+            </tr>
+            <tr>
+                <td><code>POST /api/request</code></td>
+                <td><code>routes_request.py</code></td>
+                <td>Submit blood request → get urgency + entities + matched donors</td>
+            </tr>
+            <tr>
+                <td><code>GET /api/donors</code></td>
+                <td><code>routes_donor.py</code></td>
+                <td>Search donors by blood group, location, availability</td>
+            </tr>
+            <tr>
+                <td><code>POST /api/donors</code></td>
+                <td><code>routes_donor.py</code></td>
+                <td>Register a new donor</td>
+            </tr>
+            <tr>
+                <td><code>GET /api/forecast</code></td>
+                <td><code>routes_forecast.py</code></td>
+                <td>Get 14-day demand prediction for a city + blood group</td>
+            </tr>
+        </table>
+
+
+        <!-- ======================== ML PIPELINE ======================== -->
+        <div class="section-header">
+            <span class="icon">🧠</span>
+            <h2>Backend — ML Pipeline (The AI Brain)</h2>
+            <span class="path">backend/ml/</span>
+        </div>
+        <p class="section-desc">Each subfolder = one stage of the 5-stage pipeline. This is where all the AI magic happens.</p>
+
+        <!-- Stage 1 -->
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-blue">🧹 preprocessing/</div>
+                <div class="folder-desc">
+                    <strong>Stage 1: NLP Text Cleaning</strong> — Turn messy WhatsApp messages into clean, model-ready text.
+                    <div class="files">cleaner.py, transliterator.py, language_detect.py, tokenizer.py</div>
+                </div>
+            </div>
+        </div>
+        <div class="io-block">
+            <div class="io-box io-in">"Urgent!! Need O -ve blood 🙏🙏"</div>
+            <div class="io-arrow">→</div>
+            <div class="io-box io-out">["urgent", "need", "O-", "blood"]</div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-orange">🚨 triage/</div>
+                <div class="folder-desc">
+                    <strong>Stage 2: Urgency Classification</strong> — Fine-tuned MuRIL transformer. Classifies P0 (critical) → P3 (info).
+                    <div class="files">classifier.py, train.py, evaluate.py</div>
+                </div>
+            </div>
+        </div>
+        <div class="io-block">
+            <div class="io-box io-in">Cleaned token sequence</div>
+            <div class="io-arrow">→</div>
+            <div class="io-box io-out">{"urgency": "P0_CRITICAL", "confidence": 0.94}</div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-green">🏷️ ner/</div>
+                <div class="folder-desc">
+                    <strong>Stage 3: Named Entity Recognition</strong> — Transformer + BiLSTM + CRF extracts structured entities.
+                    <div class="files">extractor.py, train.py, evaluate.py</div>
+                </div>
+            </div>
+        </div>
+        <div class="io-block">
+            <div class="io-box io-in">"Need 3 units O- at AIIMS Delhi"</div>
+            <div class="io-arrow">→</div>
+            <div class="io-box io-out">{"blood_group": "O-", "hospital": "AIIMS Delhi", "units": 3}</div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-red">🎯 matching/</div>
+                <div class="folder-desc">
+                    <strong>Stage 4: Donor Matching Engine</strong> — Filters compatible donors, ranks by proximity + reliability using XGBoost.
+                    <div class="files">compatibility.py, geospatial.py, ranker.py, engine.py</div>
+                </div>
+            </div>
+        </div>
+        <div class="io-block">
+            <div class="io-box io-in">{"blood_group": "O-", "lat": 28.57}</div>
+            <div class="io-arrow">→</div>
+            <div class="io-box io-out">[{donor: "Ravi", dist: 2.3km, score: 0.91}]</div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-purple">📈 forecasting/</div>
+                <div class="folder-desc">
+                    <strong>Stage 5: Demand Forecasting</strong> — Temporal Fusion Transformer predicts blood demand 14 days ahead.
+                    <div class="files">tft_model.py, train.py, evaluate.py</div>
+                </div>
+            </div>
+        </div>
+        <div class="io-block">
+            <div class="io-box io-in">Last 90 days demand data</div>
+            <div class="io-arrow">→</div>
+            <div class="io-box io-out">Next 14 days predicted demand (with confidence)</div>
+        </div>
+
+        <div class="callout">
+            <strong>pipeline.py</strong> — One file that chains all 5 stages: message → clean → classify → extract → match → return. This is the single entry point the API calls.
+        </div>
+
+
+        <!-- ======================== FRONTEND ======================== -->
+        <div class="page-break"></div>
+
+        <div class="section-header">
+            <span class="icon">🎨</span>
+            <h2>Frontend — React + TypeScript</h2>
+            <span class="path">frontend/src/</span>
+        </div>
+        <p class="section-desc">The user-facing application built with Vite + React. Everything the user sees and interacts with.</p>
+
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-red">📂 pages/</div>
+                <div class="folder-desc">
+                    <strong>Full Page Views</strong> — Each file = one route/screen in the app.
+                    <div class="files">Landing.tsx, SOSRequest.tsx, Dashboard.tsx, Forecast.tsx, DonorRegister.tsx</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-blue">📂 components/</div>
+                <div class="folder-desc">
+                    <strong>Reusable UI Pieces</strong> — Navbar, DonorCard, UrgencyBadge, DonorMap, Charts, Modals.
+                    <div class="files">layout/, request/, donor/, dashboard/, common/</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-green">📂 hooks/</div>
+                <div class="folder-desc">
+                    <strong>Custom React Hooks</strong> — Reusable logic for API calls and state management.
+                    <div class="files">useBloodRequest.ts, useDonorSearch.ts, useForecast.ts, useWebSocket.ts</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-purple">📂 services/</div>
+                <div class="folder-desc">
+                    <strong>API Communication</strong> — Axios calls to FastAPI backend. One file per resource.
+                    <div class="files">api.ts, requestApi.ts, donorApi.ts, forecastApi.ts</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-orange">📂 types/</div>
+                <div class="folder-desc">
+                    <strong>TypeScript Interfaces</strong> — Mirror of backend Pydantic schemas for type safety.
+                    <div class="files">request.ts, donor.ts, forecast.ts</div>
+                </div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-yellow">📂 styles/</div>
+                <div class="folder-desc">
+                    <strong>CSS</strong> — Global theme (dark mode, colors, fonts), animations, component styles.
+                    <div class="files">globals.css, animations.css, components.css</div>
+                </div>
+            </div>
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <th>Page</th>
+                <th>What User Sees</th>
+            </tr>
+            <tr>
+                <td><code>Landing.tsx</code></td>
+                <td>Hero section, problem statement, "Submit SOS" CTA, how-it-works animation</td>
+            </tr>
+            <tr>
+                <td><code>SOSRequest.tsx</code></td>
+                <td>Text area to paste blood request → real-time pipeline animation → donors on map</td>
+            </tr>
+            <tr>
+                <td><code>Dashboard.tsx</code></td>
+                <td>Live request feed, stats cards, blood stock chart, demand heatmap</td>
+            </tr>
+            <tr>
+                <td><code>Forecast.tsx</code></td>
+                <td>14-day demand charts per blood group, city selector, confidence bands</td>
+            </tr>
+            <tr>
+                <td><code>DonorRegister.tsx</code></td>
+                <td>Donor sign-up form, auto-detect GPS location, availability toggle</td>
+            </tr>
+        </table>
+
+
+        <!-- ======================== DATA & SUPPORT ======================== -->
+
+        <div class="section-header">
+            <span class="icon">📊</span>
+            <h2>Data, Notebooks & Support</h2>
+        </div>
+
+        <div class="folder-grid">
+            <div class="folder-card">
+                <div class="folder-name bg-red">📂 data/raw/</div>
+                <div class="folder-desc">Original unprocessed data — Twitter scrapes, WhatsApp forwards, Kaggle downloads</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-orange">📂 data/processed/</div>
+                <div class="folder-desc">Output of Stage 1 preprocessing — cleaned messages ready for labeling</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-green">📂 data/annotated/</div>
+                <div class="folder-desc">Manually labeled training data — urgency labels (P0–P3), NER BIO tags</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-purple">📂 data/synthetic/</div>
+                <div class="folder-desc">AI-generated data — GPT/Gemini synthetic messages, 50K simulated donors</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-blue">📂 notebooks/</div>
+                <div class="folder-desc">Jupyter notebooks for EDA, model development, evaluation — <strong>not production code</strong></div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-yellow">📂 configs/</div>
+                <div class="folder-desc">YAML files — model hyperparameters, training settings. Change configs, not code.</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-gray">📂 backend/models/</div>
+                <div class="folder-desc">Saved trained weights — populated after running train.py scripts (initially empty)</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-gray">📂 docker/</div>
+                <div class="folder-desc">Dockerfiles for containerized deployment (build last)</div>
+            </div>
+            <div class="folder-card">
+                <div class="folder-name bg-gray">📂 docs/</div>
+                <div class="folder-desc">Architecture diagrams, API documentation, final results report</div>
+            </div>
+        </div>
+
+
+        <!-- ======================== TECH STACK TABLE ======================== -->
+        <div class="section-header">
+            <span class="icon">⚡</span>
+            <h2>Tech Stack Summary</h2>
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <th>Layer</th>
+                <th>Technology</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><strong>Frontend</strong></td>
+                <td>Vite + React + TypeScript</td>
+                <td>User interface, maps, charts, real-time updates</td>
+            </tr>
+            <tr>
+                <td><strong>Backend API</strong></td>
+                <td>FastAPI + Pydantic</td>
+                <td>REST API, request validation, routing</td>
+            </tr>
+            <tr>
+                <td><strong>NLP</strong></td>
+                <td>MuRIL, IndicTrans2, spaCy</td>
+                <td>Multilingual text processing, Indian languages</td>
+            </tr>
+            <tr>
+                <td><strong>Transformers</strong></td>
+                <td>HuggingFace, XLM-RoBERTa</td>
+                <td>Urgency classification, NER</td>
+            </tr>
+            <tr>
+                <td><strong>ML</strong></td>
+                <td>XGBoost, scikit-learn</td>
+                <td>Donor ranking, feature engineering</td>
+            </tr>
+            <tr>
+                <td><strong>Deep Learning</strong></td>
+                <td>PyTorch, TFT</td>
+                <td>Demand forecasting, time-series</td>
+            </tr>
+            <tr>
+                <td><strong>Database</strong></td>
+                <td>SQLite / PostgreSQL</td>
+                <td>Donor registry, request history</td>
+            </tr>
+            <tr>
+                <td><strong>Package Manager</strong></td>
+                <td>uv (Python), npm (JS)</td>
+                <td>Fast dependency management</td>
+            </tr>
+        </table>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <strong>BloodBridge</strong> &nbsp;|&nbsp; AI-Powered Emergency Blood Matching System &nbsp;|&nbsp; Kartik Tewari &nbsp;|&nbsp; 2026<br>
+            <span style="font-size: 8pt; color: #9ca3af;">NLP • Transformers • Machine Learning • Deep Learning • Full-Stack Development</span>
+        </div>
+
+    </div>
+</body>
+</html>

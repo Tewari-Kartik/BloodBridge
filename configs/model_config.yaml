@@ -1,0 +1,24 @@
+# Model hyperparameters
+urgency_classifier:
+  model_name: "google/muril-base-cased"
+  num_labels: 4
+  max_length: 256
+  labels: ["P0_CRITICAL", "P1_HIGH", "P2_MODERATE", "P3_INFO"]
+
+ner:
+  model_name: "xlm-roberta-base"
+  max_length: 256
+  entities: ["BLOOD_GROUP", "HOSPITAL", "LOCATION", "UNITS", "CONDITION", "CONTACT", "TIME_CONSTRAINT"]
+
+donor_ranker:
+  model: "xgboost"
+  n_estimators: 200
+  max_depth: 6
+  learning_rate: 0.1
+
+demand_forecaster:
+  model: "temporal_fusion_transformer"
+  hidden_size: 64
+  attention_head_size: 4
+  max_encoder_length: 90
+  max_prediction_length: 14

@@ -1,0 +1,48 @@
+# Dependencies & environments
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.uv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Model weights (too large for GitHub)
+backend/models/urgency_classifier/checkpoint-*/
+backend/models/urgency_classifier/best_model/
+backend/models/matching/*.json
+backend/models/forecasting/*.json
+!backend/models/**/.gitkeep
+
+# Data files (large CSVs)
+data/synthetic/*.csv
+data/processed/*.json
+data/processed/splits/*.json
+!data/**/.gitkeep
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Env
+.env
+.env.*
+
+# Misc
+wandb/
+*.log
+uv.lock
