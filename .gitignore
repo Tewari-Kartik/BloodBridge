@@ -15,7 +15,6 @@ backend/models/urgency_classifier/best_model/
 !backend/models/**/.gitkeep
 
 # Data files (large CSVs)
-data/synthetic/*.csv
 data/processed/*.json
 data/processed/splits/*.json
 !data/**/.gitkeep
