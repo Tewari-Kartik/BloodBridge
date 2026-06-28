@@ -12,8 +12,6 @@ venv/
 # Model weights (too large for GitHub)
 backend/models/urgency_classifier/checkpoint-*/
 backend/models/urgency_classifier/best_model/
-backend/models/matching/*.json
-backend/models/forecasting/*.json
 !backend/models/**/.gitkeep
 
 # Data files (large CSVs)
