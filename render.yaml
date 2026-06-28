@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: bloodbridge-api
+    runtime: python
+    plan: free
+    buildCommand: pip install uv && uv sync --no-dev
+    startCommand: uv run uvicorn backend.api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /api/health
