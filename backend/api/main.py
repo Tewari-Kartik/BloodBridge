@@ -68,7 +68,9 @@ async def lifespan(app: FastAPI):
         models.classifier = UrgencyClassifier.load(best_model_dir)
         print("  [2/5] Urgency classifier loaded")
     else:
-        print("  [2/5] WARNING: No trained classifier found")
+        print("  [2/5] WARNING: No trained classifier found. Using rule-based fallback.")
+        from backend.ml.triage.classifier import RuleBasedUrgencyClassifier
+        models.classifier = RuleBasedUrgencyClassifier()
 
     # Stage 3: NER
     from backend.ml.ner.extractor import BloodRequestNER

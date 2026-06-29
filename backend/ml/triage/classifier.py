@@ -239,3 +239,42 @@ class UrgencyClassifier:
                 })
 
         return results
+
+class RuleBasedUrgencyClassifier:
+    """
+    Lightweight keyword-based fallback classifier.
+    Used when the MuRIL model cannot be loaded (e.g., due to RAM limits on free tier).
+    """
+    def __init__(self):
+        self.p0_keywords = ["critical", "emergency", "urgent", "icu", "accident", "asap", "dying", "immediate", "turant", "ghayal", "gambhir"]
+        self.p1_keywords = ["surgery", "operation", "needed by", "tomorrow", "today", "hospital"]
+        self.p3_keywords = ["camp", "blood donation camp", "donate", "free checkup", "awareness"]
+
+    def predict(self, text: str, apply_cleaning: bool = True) -> dict:
+        text_lower = text.lower()
+        
+        if any(kw in text_lower for kw in self.p0_keywords):
+            urgency = "P0_CRITICAL"
+            label_id = 0
+            probs = {"P0_CRITICAL": 0.85, "P1_HIGH": 0.10, "P2_MODERATE": 0.04, "P3_INFO": 0.01}
+        elif any(kw in text_lower for kw in self.p3_keywords):
+            urgency = "P3_INFO"
+            label_id = 3
+            probs = {"P0_CRITICAL": 0.01, "P1_HIGH": 0.04, "P2_MODERATE": 0.10, "P3_INFO": 0.85}
+        elif any(kw in text_lower for kw in self.p1_keywords):
+            urgency = "P1_HIGH"
+            label_id = 1
+            probs = {"P0_CRITICAL": 0.15, "P1_HIGH": 0.75, "P2_MODERATE": 0.08, "P3_INFO": 0.02}
+        else:
+            urgency = "P2_MODERATE"
+            label_id = 2
+            probs = {"P0_CRITICAL": 0.05, "P1_HIGH": 0.15, "P2_MODERATE": 0.75, "P3_INFO": 0.05}
+            
+        return {
+            "urgency": urgency,
+            "label_id": label_id,
+            "confidence": probs[urgency],
+            "probabilities": probs,
+            "is_critical": label_id <= 1,
+            "is_fallback": True
+        }
