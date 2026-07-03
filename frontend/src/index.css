@@ -1072,3 +1072,339 @@ code {
   .nav-links { display: none; }
   .match-form { flex-direction: column; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Premium Cursor
+   ═══════════════════════════════════════════════════════ */
+body { cursor: none; }
+.bb-cursor-dot,
+.bb-cursor-ring {
+  pointer-events: none;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+.bb-cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--red-500);
+}
+.bb-cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--red-500);
+  opacity: 0.5;
+  transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease;
+}
+.bb-cursor-ring.hovered {
+  width: 52px; height: 52px;
+  opacity: 0.25;
+}
+iframe, video { cursor: auto; }
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .bb-cursor-dot, .bb-cursor-ring { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Microphone Button (Pipeline)
+   ═══════════════════════════════════════════════════════ */
+.bb-mic-btn {
+  position: absolute;
+  right: 12px; bottom: 12px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.bb-mic-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--red-500);
+}
+.bb-mic-icon {
+  font-size: 1.25rem;
+  transition: color 0.2s;
+}
+.bb-mic-icon.active {
+  color: var(--red-500);
+}
+.bb-mic-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--red-500);
+  animation: mic-pulse 1.2s ease-out infinite;
+}
+@keyframes mic-pulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: AI Analysis Card
+   ═══════════════════════════════════════════════════════ */
+.ai-analysis-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(220,38,38,0.03) 100%);
+  border: 1px solid rgba(220,38,38,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.ai-analysis-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red-500), transparent);
+  animation: ai-shimmer 3s ease-in-out infinite;
+}
+@keyframes ai-shimmer {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
+}
+.ai-analysis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.ai-badge {
+  background: var(--red-glow);
+  color: var(--red-400);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.ai-analysis-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ai-summary {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.ai-summary strong {
+  color: var(--red-400);
+}
+.ai-action {
+  border-left: 3px solid var(--red-500);
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.ai-action-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.ai-action p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.ai-donors {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+.ai-donors strong {
+  color: var(--green-400);
+}
+.ai-contact {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+.ai-contact strong {
+  color: var(--blue-400);
+}
+.ai-confidence {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.ai-conf-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.ai-conf-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Floating Particles (Hero)
+   ═══════════════════════════════════════════════════════ */
+.bb-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero { position: relative; }
+.hero .hero-content { position: relative; z-index: 1; }
+.bb-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--red-500) 0%, transparent 70%);
+  animation: bb-float linear infinite;
+}
+@keyframes bb-float {
+  0%   { transform: translateY(0) translateX(0) scale(1); }
+  25%  { transform: translateY(-40px) translateX(20px) scale(1.1); }
+  50%  { transform: translateY(-10px) translateX(-15px) scale(0.9); }
+  75%  { transform: translateY(-50px) translateX(10px) scale(1.05); }
+  100% { transform: translateY(0) translateX(0) scale(1); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Typing Cursor
+   ═══════════════════════════════════════════════════════ */
+.bb-type-cursor {
+  display: inline-block;
+  color: var(--red-500);
+  font-weight: 300;
+  animation: bb-blink 0.7s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes bb-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Glowing Card Hover Effect
+   ═══════════════════════════════════════════════════════ */
+.bb-glow-card {
+  position: relative;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+}
+.bb-glow-card:hover {
+  border-color: rgba(220, 38, 38, 0.25);
+  box-shadow:
+    0 0 20px rgba(220, 38, 38, 0.06),
+    0 0 60px rgba(220, 38, 38, 0.03),
+    inset 0 0 30px rgba(220, 38, 38, 0.02);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Skeleton Loader
+   ═══════════════════════════════════════════════════════ */
+.bb-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: bb-shimmer 1.5s ease-in-out infinite;
+}
+@keyframes bb-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW: Donor Map Styles
+   ═══════════════════════════════════════════════════════ */
+.bb-map-wrapper {
+  padding: 0 !important;
+  overflow: hidden;
+}
+.bb-map-wrapper .leaflet-container {
+  background: var(--bg-primary);
+}
+.bb-map-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.bb-map-filter {
+  padding: 4px 10px !important;
+  font-size: 0.75rem !important;
+  border-radius: 20px !important;
+}
+.bb-map-filter.active {
+  background: var(--red-glow) !important;
+  border-color: var(--red-500) !important;
+  color: var(--red-400) !important;
+}
+.bb-map-pin {
+  background: none !important;
+  border: none !important;
+}
+.bb-pin-inner {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 6px rgba(220,38,38,0.5));
+  animation: bb-pin-bob 2s ease-in-out infinite;
+}
+@keyframes bb-pin-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.bb-map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  min-width: 160px;
+}
+.bb-map-popup strong {
+  font-size: 0.95rem;
+  color: #111;
+}
+.bb-popup-blood {
+  display: inline-block;
+  background: #dc2626;
+  color: white;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+.bb-map-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.bb-map-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red-500);
+  display: inline-block;
+  animation: bb-pin-bob 2s ease-in-out infinite;
+}
+
+/* Leaflet popup override for dark theme */
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+}
+.leaflet-popup-tip {
+  box-shadow: none !important;
+}
