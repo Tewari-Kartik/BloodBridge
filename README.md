@@ -16,7 +16,7 @@
 
 <br/>
 
-[**🌐 Live Demo**](https://blood-bridge-bice.vercel.app/) &nbsp;•&nbsp; [Features](#-why-bloodbridge) &nbsp;•&nbsp; [Architecture](#-pipeline-at-a-glance) &nbsp;•&nbsp; [Getting Started](#-getting-started) &nbsp;•&nbsp; [API Reference](#-api-reference) &nbsp;•&nbsp; [Contributing](#-contributing)
+[**🌐 Live Demo**](https://blood-bridge-bice.vercel.app/) &nbsp;•&nbsp; [Features](#-key-features) &nbsp;•&nbsp; [Architecture](#-pipeline-at-a-glance) &nbsp;•&nbsp; [Getting Started](#-getting-started) &nbsp;•&nbsp; [API Reference](#-api-reference) &nbsp;•&nbsp; [FAQ](#-faq) &nbsp;•&nbsp; [Contributing](#-contributing)
 
 <br/>
 
@@ -24,11 +24,37 @@
 
 <br/>
 
-**🔗 Try it live → [blood-bridge-bice.vercel.app](https://blood-bridge-bice.vercel.app/)**
+<a href="https://blood-bridge-bice.vercel.app/">
+  <img src="https://img.shields.io/badge/🌐_LIVE_DEMO-blood--bridge--bice.vercel.app-CC0000?style=for-the-badge" alt="Live Demo" />
+</a>
 
----
+<br/><br/>
+
+<!--
+  📸 Add a real screenshot or short GIF of your dashboard here for maximum impact:
+  ![BloodBridge Dashboard](docs/assets/dashboard-preview.png)
+  A visual preview here dramatically increases engagement on GitHub.
+-->
 
 </div>
+
+<br/>
+
+<div align="center">
+
+### 💡 The Problem → The Solution
+
+| ❌ Without BloodBridge | ✅ With BloodBridge |
+|---|---|
+| Manual phone calls to donor lists, one by one | Automated ranking of 50,000 donors in ~1 second |
+| Urgency judged by whoever reads the message first | ML-driven P0–P3 triage with 94.6% critical-case recall |
+| English-only forms that don't match real messages | Native Hindi / English / Hinglish understanding |
+| No visibility into future shortages | Demand forecasting by city and blood type |
+| Blood type matched manually, errors possible | Full medical cross-compatibility rules applied automatically |
+
+</div>
+
+---
 
 ## 📖 Table of Contents
 
@@ -43,7 +69,9 @@
 - [Project Structure](#-project-structure)
 - [ML Design Decisions](#-ml-design-decisions)
 - [Tech Stack](#️-tech-stack)
-- [Roadmap](#-roadmap)
+- [Use Cases](#-use-cases)
+- [FAQ](#-faq)
+- [Roadmap](#️-roadmap)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -301,6 +329,37 @@ XGBoost regressor with 27 engineered features: calendar signals (day, month, wee
 - [ ] Expanded regional language support beyond Hindi/English/Hinglish
 - [ ] Live donor availability toggles and push notifications
 - [ ] Integration with hospital inventory management systems
+
+---
+
+## 🎯 Use Cases
+
+- **Hospitals & blood banks** — Plug in the `/api/pipeline` endpoint to auto-triage incoming requests from staff or patient families.
+- **NGOs & volunteer networks** — Use the donor-matching stage to instantly generate a call list ranked by proximity and reliability.
+- **Health-tech platforms** — Integrate the NER and triage stages as microservices inside a larger patient-communication product.
+- **Public health researchers** — Use the forecasting model to study seasonal or regional blood demand patterns.
+
+---
+
+## ❓ FAQ
+
+**Is BloodBridge using real donor or patient data?**
+No — all data (messages, donors, and time-series) is synthetically generated via the scripts in `data/synthetic/`. This keeps the project safe to run, share, and demo without any privacy or medical-data compliance concerns. Swapping in real, consented data would require additional privacy and regulatory review.
+
+**Can BloodBridge send actual notifications to donors?**
+Not yet — today it returns a ranked shortlist via the API/dashboard. SMS/WhatsApp notification integration is on the [roadmap](#️-roadmap).
+
+**Why MuRIL instead of a general-purpose LLM for triage?**
+MuRIL is purpose-built for Indian languages and fine-tunes efficiently on a small labeled dataset, giving fast, cheap, and highly interpretable inference — important for a life-critical classification task where latency and auditability both matter.
+
+**Why regex/gazetteers instead of neural NER?**
+Clinical entities like blood group, phone number, and unit counts follow fairly predictable patterns. A hybrid rule-based approach hits 100% accuracy on blood group extraction while staying fully interpretable and requiring no additional training data — a neural model would add latency and complexity without a clear accuracy gain here.
+
+**What happens if the model misses a P0 (critical) case?**
+The classifier is deliberately tuned with weighted cross-entropy loss to bias toward catching every critical case, achieving 94.6% P0 recall. In a production deployment, this should still sit alongside a human-in-the-loop safety net rather than being fully autonomous.
+
+**Can I run this without a GPU?**
+Yes. Training the MuRIL triage model takes about 5 hours on CPU (vs ~30 minutes on GPU). Inference is fast on CPU either way. Matching and forecasting models train in seconds regardless of hardware.
 
 ---
 
