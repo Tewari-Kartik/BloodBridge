@@ -1243,7 +1243,10 @@ body:not(:has(.bb-cursor-dot)) {
   border-color: var(--red-500);
 }
 .bb-mic-icon {
-  font-size: 1.25rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.2s;
 }
 .bb-mic-icon.active {
@@ -1260,7 +1263,6 @@ body:not(:has(.bb-cursor-dot)) {
   0%   { transform: scale(1);   opacity: 0.6; }
   100% { transform: scale(1.5); opacity: 0; }
 }
-
 /* ═══════════════════════════════════════════════════════
    NEW: AI Analysis Card
    ═══════════════════════════════════════════════════════ */
@@ -2502,3 +2504,18 @@ body:not(:has(.bb-cursor-dot)) {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* ═══════════════════════════════════════════════════════
+   FIX: Native select dropdown theming (city/hospital/etc.)
+   ═══════════════════════════════════════════════════════ */
+select {
+  color-scheme: dark;
+}
+
+.form-group select option,
+.forecast-controls select option {
+  background: #0d0d14;
+  color: var(--text-primary);
+}
+

@@ -165,16 +165,26 @@ class DonorMatchingEngine:
 
         # Step 2: Compute features and score each candidate
         scored = []
+        all_features = []
+        
         for donor in candidates:
-            features = self._compute_features(
-                donor, blood_group, req_lat, req_lon, urgency
-            )
-            score = self._score(features)
-            scored.append({
-                'donor': donor,
-                'features': features,
-                'score': round(score, 4),
-            })
+            f = self._compute_features(donor, blood_group, req_lat, req_lon, urgency)
+            all_features.append(f)
+            scored.append({'donor': donor, 'features': f, 'score': 0.0})
+            
+        if self.model is not None and all_features:
+            import numpy as np
+            X = np.array([[
+                f['distance_score'], f['is_exact_match'], f['response_rate'],
+                f['donation_recency_score'], f['experience_score'],
+                f['response_speed_score'], f['blood_rarity']
+            ] for f in all_features])
+            scores = self.model.predict_proba(X)[:, 1]
+            for i in range(len(scored)):
+                scored[i]['score'] = round(float(scores[i]), 4)
+        else:
+            for i, f in enumerate(all_features):
+                scored[i]['score'] = round(self._score(f), 4)
 
         # Step 3: Sort by score (descending) and take top-K
         scored.sort(key=lambda x: -x['score'])
