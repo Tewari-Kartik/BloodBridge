@@ -550,8 +550,10 @@ function DashboardPage({ onSelectStage }) {
         <HeroParticles />
         <div className="container hero-content">
           <div className="hero-badge">
-            <span className={`dot ${backendOnline ? '' : 'offline'}`}></span>
-            {backendOnline ? (
+            <span className={`dot ${backendOnline ? '' : loading ? 'connecting' : 'offline'}`} style={loading ? {background: 'var(--blue-400)', boxShadow: '0 0 10px var(--blue-400)'} : {}}></span>
+            {loading ? (
+              'Connecting to AI...'
+            ) : backendOnline ? (
               <RotatingBadgeText messages={[
                 'AI System Online',
                 '50,000+ Donors Ready',
@@ -672,8 +674,8 @@ function DashboardPage({ onSelectStage }) {
         <div className="container">
           <SectionHeader eyebrow="System Status" title="System Overview">
             Real-time health status of the BloodBridge ML backend
-            <StatusPill online={backendOnline}>
-              {backendOnline ? `Online · ${health?.startup_time_s}s startup` : 'Offline'}
+            <StatusPill online={backendOnline || loading}>
+              {loading ? 'Checking status...' : backendOnline ? `Online · ${health?.startup_time_s}s startup` : 'Offline'}
             </StatusPill>
           </SectionHeader>
           {loading ? (
