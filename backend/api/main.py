@@ -63,12 +63,23 @@ async def lifespan(app: FastAPI):
 
     # Stage 2: Urgency Classifier
     best_model_dir = "backend/models/urgency_classifier/best_model"
-    if os.path.exists(best_model_dir):
+    hf_token = os.environ.get("HF_TOKEN")
+    hf_repo = "soon007/bloodbridge-urgency-classifier"
+
+    try:
         from backend.ml.triage.classifier import UrgencyClassifier
-        models.classifier = UrgencyClassifier.load(best_model_dir)
-        print("  [2/5] Urgency classifier loaded")
-    else:
-        print("  [2/5] WARNING: No trained classifier found. Using rule-based fallback.")
+        if hf_token:
+            print(f"  [2/5] Fetching classifier from Hugging Face Hub ({hf_repo})...")
+            models.classifier = UrgencyClassifier.load(hf_repo, token=hf_token)
+            print("  [2/5] Urgency classifier loaded from HF")
+        elif os.path.exists(best_model_dir):
+            print("  [2/5] Loading local classifier...")
+            models.classifier = UrgencyClassifier.load(best_model_dir)
+            print("  [2/5] Urgency classifier loaded locally")
+        else:
+            raise FileNotFoundError("No local model and no HF_TOKEN provided")
+    except Exception as e:
+        print(f"  [2/5] WARNING: {e}. Using rule-based fallback.")
         from backend.ml.triage.classifier import RuleBasedUrgencyClassifier
         models.classifier = RuleBasedUrgencyClassifier()
 

@@ -95,21 +95,22 @@ class UrgencyClassifier:
         return cls(model=model, tokenizer=tokenizer, device=device)
 
     @classmethod
-    def load(cls, model_dir: str, device: Optional[str] = None):
+    def load(cls, model_dir: str, device: Optional[str] = None, **kwargs):
         """
         Load a fine-tuned classifier from a saved directory.
 
         Args:
-            model_dir: Path to saved model directory (contains model + tokenizer).
+            model_dir: Path to saved model directory or Hugging Face repo (e.g. 'soon007/model').
             device: Device for inference.
+            **kwargs: Extra arguments like 'token' for private HF repos.
 
         Returns:
             UrgencyClassifier ready for inference.
         """
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-        tokenizer = AutoTokenizer.from_pretrained(model_dir)
-        model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+        tokenizer = AutoTokenizer.from_pretrained(model_dir, **kwargs)
+        model = AutoModelForSequenceClassification.from_pretrained(model_dir, **kwargs)
 
         print(f"[Classifier] Loaded fine-tuned model from: {model_dir}")
         return cls(model=model, tokenizer=tokenizer, device=device)
