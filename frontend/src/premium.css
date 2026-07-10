@@ -473,3 +473,22 @@ input:focus-visible,
 
 /* Headline sits closer to the ECG line now, tighter vertical rhythm */
 .login-headline-v2 { margin-top: 4px; }
+
+/* ── Overriding Chrome's pale autocomplete background ── */
+.floating-input:-webkit-autofill,
+.floating-input:-webkit-autofill:hover, 
+.floating-input:-webkit-autofill:focus, 
+.floating-input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover, 
+.login-input:-webkit-autofill:focus, 
+.login-input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+    -webkit-text-fill-color: var(--text-primary) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
