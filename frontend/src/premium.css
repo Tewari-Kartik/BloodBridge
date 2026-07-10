@@ -118,3 +118,137 @@ input:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .hero-photo-layer { mask-image: none; -webkit-mask-image: none; opacity: 0.18; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM REDESIGN — Pass 2: Navbar
+   ═══════════════════════════════════════════════════════ */
+
+.navbar-v2 {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 22px 0;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease;
+}
+
+.navbar-v2.is-scrolled {
+  padding: 13px 0;
+  background: rgba(5, 5, 7, 0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-v2-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brand mark shrinks subtly on scroll — a small detail that reads as
+   "this interface pays attention," not just a static bar. */
+.navbar-v2 .nav-brand img {
+  width: 34px; height: 34px; border-radius: 8px;
+  transition: width 0.35s ease, height 0.35s ease;
+}
+.navbar-v2.is-scrolled .nav-brand img { width: 28px; height: 28px; }
+
+.navbar-v2 .nav-brand h1 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--red-400), var(--red-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links-v2 {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+
+.nav-links-v2-item { position: relative; }
+
+.nav-links-v2 button {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.nav-links-v2 button:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.nav-links-v2 button.active {
+  color: var(--text-primary);
+}
+
+.nav-underline-v2 {
+  position: absolute;
+  left: 16px; right: 16px; bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--red-500), var(--red-400));
+  box-shadow: 0 0 10px rgba(232, 73, 63, 0.55);
+}
+
+/* Profile avatar — teal ring: a person, not an alert */
+.nav-profile-btn-v2 {
+  background: none; border: none; padding: 2px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  margin-left: 6px;
+}
+.nav-profile-avatar-v2 {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal-400), #4fae99);
+  color: #06120f;
+  font-size: 0.8rem; font-weight: 700;
+  font-family: var(--font-heading);
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.nav-profile-btn-v2:hover .nav-profile-avatar-v2 { border-color: rgba(125, 211, 192, 0.4); }
+.nav-profile-btn-v2.active .nav-profile-avatar-v2 {
+  border-color: var(--teal-400);
+  box-shadow: 0 0 0 3px rgba(125, 211, 192, 0.16);
+}
+
+.login-logout-btn-v2 {
+  background: none; border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 10px 0 10px 16px;
+  margin-left: 6px;
+  border-left: 1px solid rgba(255,255,255,0.07);
+  transition: color 0.2s ease;
+}
+.login-logout-btn-v2:hover { color: var(--red-400); }
+
+@media (max-width: 768px) {
+  .nav-links-v2 { display: none; }
+}

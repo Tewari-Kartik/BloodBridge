@@ -6,6 +6,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './index.css'
 import './premium.css'
+import NavbarV2 from './components/NavbarV2'
 import HeroSignature from './components/HeroSignature'
 import PageTransitionV2 from './components/PageTransitionV2'
 import { useLenis } from './hooks/useLenis'
@@ -1824,31 +1825,12 @@ export default function App() {
     <div className="app">
       <PremiumCursor />
 
-      <nav className="navbar">
-        <div className="container" style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-          <a className="nav-brand" href="#" onClick={() => setPage('dashboard')}>
-            <img src="/logo.png" alt="BloodBridge" />
-            <h1>BloodBridge</h1>
-          </a>
-          <ul className="nav-links">
-            {[
-              {id: 'dashboard', label: 'Dashboard'},
-              {id: 'pipeline', label: 'Pipeline'},
-              {id: 'matching', label: 'Matching'},
-              {id: 'map', label: 'Donor Map'},
-              {id: 'forecast', label: 'Forecast'},
-            ].map(n => (
-              <li key={n.id}><button className={page === n.id ? 'active' : ''} onClick={() => setPage(n.id)}>{n.label}</button></li>
-            ))}
-            <li>
-              <button className={`nav-profile-btn ${page === 'profile' ? 'active' : ''}`} onClick={() => setPage('profile')} title="Profile">
-                <span className="nav-profile-avatar">{(user?.name || 'U')[0].toUpperCase()}</span>
-              </button>
-            </li>
-            <li><button className="login-logout-btn" onClick={() => { setUser(null); setPage('login') }}>Log out</button></li>
-          </ul>
-        </div>
-      </nav>
+      <NavbarV2
+        page={page}
+        setPage={setPage}
+        user={user}
+        onLogout={() => { setUser(null); setPage('login') }}
+      />
 
       <PageTransitionV2 pageKey={page}>
         {pages[page]}
