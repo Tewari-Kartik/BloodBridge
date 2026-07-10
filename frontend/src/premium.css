@@ -431,7 +431,7 @@ input:focus-visible,
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.9rem;
-  padding: 22px 14px 10px 12px;
+  padding: 16px 14px 16px 12px;
 }
 .floating-input-icon + .floating-input { padding-left: 10px; }
 
@@ -448,18 +448,10 @@ input:focus-visible,
 .floating-input-icon ~ .floating-label { left: 42px; }
 .floating-label.is-floated,
 .floating-input:-webkit-autofill ~ .floating-label {
-  top: 11px;
-  transform: translateY(0);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.95);
+  pointer-events: none;
 }
-.floating-input-wrap.is-focused .floating-label.is-floated,
-.floating-input-wrap.is-focused .floating-input:-webkit-autofill ~ .floating-label { color: var(--red-400); }
-.floating-input-wrap.is-valid .floating-label.is-floated,
-.floating-input-wrap.is-valid .floating-input:-webkit-autofill ~ .floating-label { color: var(--teal-400); }
 
 .floating-valid-check {
   padding-right: 14px;
