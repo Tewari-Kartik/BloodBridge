@@ -16,19 +16,56 @@
 
 <br/>
 
+[**🌐 Live Demo**](https://blood-bridge-bice.vercel.app/) &nbsp;•&nbsp; [Features](#-why-bloodbridge) &nbsp;•&nbsp; [Architecture](#-pipeline-at-a-glance) &nbsp;•&nbsp; [Getting Started](#-getting-started) &nbsp;•&nbsp; [API Reference](#-api-reference) &nbsp;•&nbsp; [Contributing](#-contributing)
+
+<br/>
+
 > **BloodBridge** is a real-time, AI-powered emergency blood matching system — a 5-stage ML pipeline that triages requests in milliseconds, extracts critical entities from multilingual messages (Hindi, English, Hinglish), and ranks 50,000 donors using medical compatibility rules and location intelligence.
 
 <br/>
 
+**🔗 Try it live → [blood-bridge-bice.vercel.app](https://blood-bridge-bice.vercel.app/)**
+
 ---
 
 </div>
+
+## 📖 Table of Contents
+
+- [Why BloodBridge?](#-why-bloodbridge)
+- [Live Demo](#-live-demo)
+- [Pipeline at a Glance](#-pipeline-at-a-glance)
+- [Model Scoreboard](#-model-scoreboard)
+- [Key Features](#-key-features)
+- [Getting Started](#-getting-started)
+- [Docker Deploy](#-one-command-docker-deploy)
+- [API Reference](#-api-reference)
+- [Project Structure](#-project-structure)
+- [ML Design Decisions](#-ml-design-decisions)
+- [Tech Stack](#️-tech-stack)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
 
 ## 🩸 Why BloodBridge?
 
 Blood requests arrive in panic — misspelled, code-switched, incomplete. A nurse typing from a crowded ICU won't write clean English. A patient's relative sending a WhatsApp message won't follow a form. BloodBridge was built for the real world: messy, multilingual, urgent.
 
 The pipeline processes a raw blood request message end-to-end in **~1.08 seconds** — from noisy text to a ranked shortlist of compatible, nearby donors ready to be contacted.
+
+In India, blood shortages aren't usually caused by a lack of donors — they're caused by the gap between someone needing blood *right now* and someone able to give it being found *fast enough*. BloodBridge closes that gap with a machine learning pipeline purpose-built for real, unfiltered, multilingual emergency text.
+
+---
+
+## 🌐 Live Demo
+
+BloodBridge is deployed and publicly accessible:
+
+### 👉 **[blood-bridge-bice.vercel.app](https://blood-bridge-bice.vercel.app/)**
+
+Explore the dashboard, submit a sample blood request, and watch the pipeline triage, extract, and match donors in real time.
 
 ---
 
@@ -97,6 +134,20 @@ The pipeline processes a raw blood request message end-to-end in **~1.08 seconds
 
 ---
 
+## ✨ Key Features
+
+- **🌏 Multilingual by design** — Understands Hindi, English, and Hinglish (code-switched text), reflecting how Indian healthcare communication actually happens.
+- **🚨 Life-critical triage** — A 4-class urgency classifier (P0–P3) tuned with weighted cross-entropy specifically so that critical (P0) cases are almost never missed.
+- **🏷️ Precise entity extraction** — Pulls blood group, units required, city, hospital, medical condition, contact number, and date from unstructured, noisy text with 100% accuracy on blood group detection.
+- **🤝 Medically-aware donor ranking** — Goes beyond simple blood-type matching to apply full cross-type compatibility rules, weighted by distance, donor responsiveness, recency of last donation, and rarity of blood group.
+- **📈 Predictive supply planning** — A forecasting model anticipates blood demand by city and blood type, helping blood banks plan inventory proactively instead of reactively.
+- **⚡ Real-time performance** — The full 5-stage pipeline, from raw message to ranked shortlist, completes in about **1.08 seconds**.
+- **🔒 Privacy-conscious** — Phone numbers are automatically masked during preprocessing.
+- **🐳 Production-ready deployment** — Ships with Docker Compose for one-command setup, plus a live hosted demo.
+- **📡 Well-documented REST API** — Every pipeline stage is independently callable via FastAPI, with interactive Swagger docs.
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -135,7 +186,7 @@ uv run python backend/ml/matching/run_matching.py
 uv run python backend/ml/forecasting/run_forecast.py
 ```
 
-### 3 · Run
+### 3 · Run Locally
 
 ```bash
 # Terminal 1 — Backend API (port 8000)
@@ -146,6 +197,8 @@ cd frontend && npm run dev
 ```
 
 Open **http://localhost:5173** 🎉
+
+Or skip local setup entirely and use the **[hosted live demo](https://blood-bridge-bice.vercel.app/)**.
 
 ### 🐳 One-Command Docker Deploy
 
@@ -173,6 +226,8 @@ docker compose up --build
 | `POST` | `/api/match` | Find & rank compatible donors |
 | `POST` | `/api/forecast` | Predict blood demand by city + type |
 | `POST` | `/api/pipeline` | ⚡ Full end-to-end pipeline |
+
+Full interactive documentation (Swagger UI) is available at `/docs` once the backend is running.
 
 ---
 
@@ -233,14 +288,31 @@ XGBoost regressor with 27 engineered features: calendar signals (day, month, wee
 | ML / Ranking | XGBoost · scikit-learn |
 | API | FastAPI · Uvicorn |
 | Frontend | React 19 · Vite |
-| Deployment | Docker · nginx |
+| Deployment | Docker · nginx · Vercel |
 | Packaging | uv (Python) · npm (Node) |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Real-world donor and request data partnerships with blood banks
+- [ ] SMS/WhatsApp bot integration for direct donor notification
+- [ ] Mobile app (React Native) for on-the-go donor response
+- [ ] Expanded regional language support beyond Hindi/English/Hinglish
+- [ ] Live donor availability toggles and push notifications
+- [ ] Integration with hospital inventory management systems
 
 ---
 
 ## 🤝 Contributing
 
 Pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change. Please make sure to update tests as appropriate.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
@@ -253,6 +325,8 @@ Pull requests are welcome. For major changes, open an issue first to discuss wha
 <div align="center">
 
 **Built to save lives through AI.**
+
+🌐 **[blood-bridge-bice.vercel.app](https://blood-bridge-bice.vercel.app/)**
 
 *If this project helped you or your team, please consider giving it a ⭐*
 
