@@ -267,6 +267,9 @@ input:focus-visible,
   letter-spacing: -0.03em;
   color: var(--text-primary);
   margin-bottom: 20px;
+  /* Fraunces 'J' sweeps left outside its bounding box; this prevents clipping */
+  padding-left: 0.15em;
+  margin-left: -0.15em;
 }
 
 .login-headline-v2 .login-headline-accent {
