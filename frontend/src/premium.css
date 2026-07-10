@@ -490,3 +490,136 @@ input:focus-visible,
     -webkit-text-fill-color: var(--text-primary) !important;
     transition: background-color 5000s ease-in-out 0s;
 }
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM REDESIGN — Pass 4: Pipeline Demo
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Persistent stage tracker ── */
+.pipeline-tracker {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.pipeline-tracker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.pipeline-tracker-node-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.pipeline-tracker-node {
+  position: relative;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-subtle);
+  transition: all 0.3s var(--transition-smooth);
+  margin: 0 auto;
+}
+
+.pipeline-tracker-node.is-active {
+  color: var(--red-500);
+  border-color: var(--red-500);
+  box-shadow: 0 0 0 4px rgba(232, 73, 63, 0.1);
+}
+
+.pipeline-tracker-node.is-done {
+  color: var(--teal-400);
+  border-color: var(--teal-400);
+  background: rgba(125, 211, 192, 0.08);
+}
+
+.pipeline-tracker-pulse {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--red-500);
+  animation: mic-pulse 1.2s ease-out infinite;
+}
+
+.pipeline-tracker-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  margin: 0 4px;
+  overflow: hidden;
+  position: relative;
+  top: -14px;
+}
+
+.pipeline-tracker-line-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--teal-400), var(--red-500));
+  transform-origin: left;
+  border-radius: 2px;
+}
+
+.pipeline-tracker-label {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 8px;
+  transition: color 0.3s ease;
+}
+.pipeline-tracker-label.is-active { color: var(--red-400); }
+.pipeline-tracker-label.is-done { color: var(--teal-400); }
+
+.pipeline-tracker.is-idle .pipeline-tracker-node { opacity: 0.5; }
+.pipeline-tracker.is-idle .pipeline-tracker-label { opacity: 0.5; }
+
+/* ── Result cards: flow in left-to-right, connected to the pipeline
+   metaphor, instead of a uniform fade-up ── */
+.result-card-flow {
+  animation: card-flow-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes card-flow-in {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .result-card-flow { animation: none; }
+}
+
+/* Small "connector" tick shown at the top-left of each result card,
+   visually threading them together as one continuous pipeline instead
+   of four separate boxes */
+.result-card.bb-glow-card {
+  position: relative;
+}
+.result-card.bb-glow-card::before {
+  content: '';
+  position: absolute;
+  top: 26px;
+  left: -1px;
+  width: 3px;
+  height: 24px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(180deg, var(--red-500), var(--teal-400));
+  opacity: 0.7;
+}

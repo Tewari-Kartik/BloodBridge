@@ -13,7 +13,9 @@ import GlowCard from './components/GlowCard'
 import MotionButton from './components/MotionButton'
 import HeroSignature from './components/HeroSignature'
 import PageTransitionV2 from './components/PageTransitionV2'
+import PipelineTracker from './components/PipelineTracker'
 import { useLenis } from './hooks/useLenis'
+import { useStagedPipeline } from './hooks/useStagedPipeline'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -825,6 +827,7 @@ function PipelinePage() {
   const [error, setError] = useState('')
   const [aiAnalysis, setAiAnalysis] = useState(null)
   const { listening, transcript, startListening, stopListening, speak, supported } = useSpeech()
+  const { activeStage, completedStages, start, reset, finishImmediately } = useStagedPipeline()
 
   useEffect(() => {
     if (listening && transcript) setMessage(transcript)
@@ -843,14 +846,18 @@ function PipelinePage() {
     setError('')
     setResult(null)
     setAiAnalysis(null)
+    start()   // <-- begin the 5-stage visual narration
+
     try {
       const r = await apiPost('/api/pipeline', { message, top_k_donors: 5 })
       setResult(r)
       const analysis = generateAIAnalysis(r)
       setAiAnalysis(analysis)
       if (analysis) speak(analysis.summary.replace(/\*\*/g, ''))
+      finishImmediately()   // <-- real data is back; snap tracker to 100% done
     } catch (e) {
       setError('Backend not reachable. Start it with: uv run uvicorn backend.api.main:app --port 8000')
+      reset()   // <-- don't leave the tracker stuck mid-progress on failure
     }
     setLoading(false)
   }
@@ -889,6 +896,12 @@ function PipelinePage() {
             </div>
             {error && <p className="error-msg">{error}</p>}
           </div>
+
+          <PipelineTracker
+            activeStage={activeStage}
+            completedStages={completedStages}
+            idle={!loading && !result}
+          />
 
           {/* Loading Skeletons */}
           {loading && (
@@ -929,7 +942,7 @@ function PipelinePage() {
           {result && !loading && (
             <div className="results-grid">
               <Reveal delay={0.05}>
-                <div className="card result-card bb-glow-card">
+                <div className="card result-card bb-glow-card result-card-flow">
                   <div className="result-card-header"><span className="result-stage">Stage 1</span><h4>Preprocessing</h4></div>
                   <div className="result-body">
                     <div className="result-row"><span className="result-label">Cleaned</span><span className="result-value mono">{result.preprocessing?.cleaned}</span></div>
@@ -940,7 +953,7 @@ function PipelinePage() {
 
               {result.triage && (
                 <Reveal delay={0.1}>
-                  <div className="card result-card bb-glow-card">
+                  <div className="card result-card bb-glow-card result-card-flow">
                     <div className="result-card-header"><span className="result-stage">Stage 2</span><h4>Urgency Classification</h4></div>
                     <div className="result-body">
                       <div style={{display:'flex', alignItems:'center', gap:'16px', marginBottom:'16px'}}>
@@ -962,7 +975,7 @@ function PipelinePage() {
               )}
 
               <Reveal delay={0.15}>
-                <div className="card result-card bb-glow-card">
+                <div className="card result-card bb-glow-card result-card-flow">
                   <div className="result-card-header"><span className="result-stage">Stage 3</span><h4>Named Entities ({result.entities?.entity_count || 0} found)</h4></div>
                   <div className="result-body">
                     <div className="entities-wrap">
@@ -980,7 +993,7 @@ function PipelinePage() {
 
               {result.matching && (
                 <Reveal delay={0.2}>
-                  <div className="card result-card full-width bb-glow-card">
+                  <div className="card result-card full-width bb-glow-card result-card-flow">
                     <div className="result-card-header"><span className="result-stage">Stage 4</span><h4>Donor Matching — {result.matching.stats?.total_compatible} compatible</h4></div>
                     <div className="result-body">
                       <table className="donor-table">
@@ -1007,7 +1020,7 @@ function PipelinePage() {
                 </Reveal>
               )}
 
-              <div className="card result-card perf-card">
+              <div className="card result-card perf-card result-card-flow">
                 <span>⚡ Pipeline completed in</span>
                 <span className="perf-time">{result.processing_time_ms?.toFixed(0)}ms</span>
               </div>
