@@ -252,3 +252,224 @@ input:focus-visible,
 @media (max-width: 768px) {
   .nav-links-v2 { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM REDESIGN — Pass 3: Login / Signup
+   ═══════════════════════════════════════════════════════ */
+
+/* Fraunces on the big login/signup headline, matching the hero treatment */
+.login-headline-v2 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-size: clamp(2.4rem, 4.5vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.login-headline-v2 .login-headline-accent {
+  background: linear-gradient(135deg, var(--red-400) 0%, var(--red-500) 45%, var(--teal-400) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Swap the old green accent for teal wherever a feature/stat uses it,
+   consistent with green -> teal everywhere else in the app */
+.login-feature-check.accent-teal,
+.login-stat.accent-teal .login-stat-value {
+  color: var(--teal-400) !important;
+}
+
+/* Sharper input focus state — thinner glow ring, no color banding */
+.login-input:focus {
+  border-color: rgba(232, 73, 63, 0.45);
+  box-shadow: 0 0 0 3px rgba(232, 73, 63, 0.09), 0 0 24px rgba(232, 73, 63, 0.06);
+}
+
+/* Submit button now driven by Motion (see MotionButton.jsx) — drop the
+   CSS-only hover transform so the two don't fight each other */
+.login-submit:hover:not(:disabled) {
+  box-shadow:
+    0 8px 30px rgba(232, 73, 63, 0.38),
+    0 0 0 1px rgba(232, 73, 63, 0.2) inset;
+}
+.login-submit {
+  background: linear-gradient(135deg, #e8493f 0%, #c22e26 70%, #9c2620 100%);
+}
+
+/* Card border glow now cycles red -> teal -> red instead of red -> orange
+   -> purple -> blue, so it stays inside the refined two-accent palette */
+.login-card-border {
+  background: conic-gradient(
+    from var(--login-border-angle, 0deg),
+    rgba(232, 38, 26, 0.32),
+    rgba(125, 211, 192, 0.14),
+    rgba(232, 73, 63, 0.08),
+    rgba(125, 211, 192, 0.14),
+    rgba(232, 38, 26, 0.32)
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
+   PREMIUM REDESIGN — Pass 3b: Login, done properly
+   ═══════════════════════════════════════════════════════ */
+
+/* ── ECG signature line ──
+   Sits behind the headline. Draws continuously via dashoffset animation,
+   loops seamlessly. This is the login page's one signature moment,
+   equivalent in role to HeroSignature on the dashboard. */
+.ecg-pulse-wrap {
+  position: relative;
+  height: 70px;
+  margin: 4px 0 8px -6px;
+  width: calc(100% + 40px);
+  overflow: hidden;
+}
+.ecg-pulse {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.ecg-pulse-path {
+  stroke-dasharray: 240 600;
+  stroke-dashoffset: 0;
+  animation: ecg-draw 3.2s linear infinite;
+  filter: drop-shadow(0 0 6px rgba(232, 73, 63, 0.35));
+}
+@keyframes ecg-draw {
+  0%   { stroke-dashoffset: 840; }
+  100% { stroke-dashoffset: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ecg-pulse-path { animation: none; stroke-dasharray: none; }
+}
+
+/* ── Glow card: cursor-tracked highlight ── */
+.glow-card {
+  position: relative;
+  isolation: isolate;
+}
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    380px circle at var(--glow-x, 50%) var(--glow-y, 0%),
+    rgba(255, 255, 255, 0.06),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.glow-card:hover::before { opacity: 1; }
+.glow-card > * { position: relative; z-index: 2; }
+
+/* ── Staggered field entrance container ── */
+.login-fields-stagger > * {
+  animation: field-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.login-fields-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.login-fields-stagger > *:nth-child(2) { animation-delay: 0.12s; }
+.login-fields-stagger > *:nth-child(3) { animation-delay: 0.19s; }
+.login-fields-stagger > *:nth-child(4) { animation-delay: 0.26s; }
+@keyframes field-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-fields-stagger > * { animation: none; }
+}
+
+/* ── Floating label inputs ── */
+.floating-field { position: relative; margin-bottom: 22px; }
+
+.floating-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.floating-input-wrap.is-focused {
+  border-color: rgba(232, 73, 63, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 3px rgba(232, 73, 63, 0.09), 0 0 24px rgba(232, 73, 63, 0.06);
+}
+
+.floating-input-wrap.is-valid {
+  border-color: rgba(125, 211, 192, 0.45);
+}
+
+.floating-input-wrap.has-error {
+  border-color: rgba(232, 73, 63, 0.55);
+}
+
+.floating-input-icon {
+  padding-left: 14px;
+  display: flex;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+.floating-input-wrap.is-focused .floating-input-icon { color: var(--red-400); }
+.floating-input-wrap.is-valid .floating-input-icon { color: var(--teal-400); }
+
+.floating-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  padding: 22px 14px 10px 12px;
+}
+.floating-input-icon + .floating-input { padding-left: 10px; }
+
+.floating-label {
+  position: absolute;
+  left: 42px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.floating-input-icon ~ .floating-label { left: 42px; }
+.floating-label.is-floated {
+  top: 11px;
+  transform: translateY(0);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.floating-input-wrap.is-focused .floating-label.is-floated { color: var(--red-400); }
+.floating-input-wrap.is-valid .floating-label.is-floated { color: var(--teal-400); }
+
+.floating-valid-check {
+  padding-right: 14px;
+  color: var(--teal-400);
+  display: flex;
+  flex-shrink: 0;
+}
+
+.floating-error {
+  font-size: 0.76rem;
+  color: var(--red-400);
+  overflow: hidden;
+}
+
+/* Headline sits closer to the ECG line now, tighter vertical rhythm */
+.login-headline-v2 { margin-top: 4px; }

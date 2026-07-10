@@ -7,6 +7,10 @@ import 'leaflet/dist/leaflet.css'
 import './index.css'
 import './premium.css'
 import NavbarV2 from './components/NavbarV2'
+import ECGPulse from './components/ECGPulse'
+import FloatingInput from './components/FloatingInput'
+import GlowCard from './components/GlowCard'
+import MotionButton from './components/MotionButton'
 import HeroSignature from './components/HeroSignature'
 import PageTransitionV2 from './components/PageTransitionV2'
 import { useLenis } from './hooks/useLenis'
@@ -1554,7 +1558,8 @@ function LoginPage({ onLogin, onSignup }) {
           <div className="login-logo-wrap"><div className="login-logo-glow" /><img src="/logo.png" alt="BloodBridge" className="login-brand-logo" /></div>
           <div><span className="login-brand-name">BloodBridge</span><span className="login-brand-tag">AI-POWERED MATCHING</span></div>
         </div>
-        <h1 className="login-headline">Every second<br /><span className="login-headline-accent">saves a life.</span></h1>
+        <div className="ecg-pulse-wrap"><ECGPulse /></div>
+        <h1 className="login-headline login-headline-v2">Every second<br /><span className="login-headline-accent">saves a life.</span></h1>
         <p className="login-subtitle">AI finds the perfect donor match before you finish reading this. From raw text to ranked donors — in under two seconds.</p>
         <ul className="login-features">
           {features.map((f, i) => (
@@ -1571,15 +1576,40 @@ function LoginPage({ onLogin, onSignup }) {
 
       <div className="login-right">
         <div className="login-card-border" ref={formRef}>
-          <form className="login-card" onSubmit={handleSubmit} autoComplete="off">
-            <div className="login-card-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Welcome back</div>
-            <h2 className="login-card-title">Sign in</h2>
-            <p className="login-card-subtitle">Continue your lifesaving journey</p>
-            <div className="login-field"><label className="login-label">Email</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span><input type="email" name="bb-login-email" className="login-input" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="off" /></div></div>
-            <div className="login-field"><label className="login-label">Password</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input type={showPw ? 'text' : 'password'} className="login-input" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" /><button type="button" className="login-pw-toggle" onClick={() => setShowPw(!showPw)} tabIndex={-1}>{showPw ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>}</button></div></div>
-            <button type="submit" className="login-submit" disabled={loading}>{loading ? (<><span className="spinner" /> Signing in…</>) : (<>Sign in <span className="login-submit-arrow">→</span></>)}</button>
-            <p className="login-footer-text">Don't have an account? <button type="button" className="login-link" onClick={onSignup}>Create one free</button></p>
-          </form>
+          <GlowCard className="login-card">
+            <form onSubmit={handleSubmit} autoComplete="off" style={{ position: 'relative', zIndex: 2 }}>
+              <div className="login-card-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Welcome back</div>
+              <h2 className="login-card-title">Sign in</h2>
+              <p className="login-card-subtitle">Continue your lifesaving journey</p>
+              <div className="login-fields-stagger">
+                <FloatingInput
+                  label="Email"
+                  name="bb-login-email"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>}
+                  validate={(v) => !v ? null : (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : "That doesn't look like a full email address")}
+                />
+                <FloatingInput
+                  label="Password"
+                  type={showPw ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>}
+                  rightSlot={
+                    <button type="button" className="login-pw-toggle" onClick={() => setShowPw(!showPw)} tabIndex={-1}>
+                      {showPw ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>}
+                    </button>
+                  }
+                />
+              </div>
+              <MotionButton type="submit" className="login-submit" disabled={loading}>{loading ? (<><span className="spinner" /> Signing in…</>) : (<>Sign in <span className="login-submit-arrow">→</span></>)}</MotionButton>
+              <p className="login-footer-text">Don't have an account? <button type="button" className="login-link" onClick={onSignup}>Create one free</button></p>
+            </form>
+          </GlowCard>
         </div>
       </div>
     </div>
@@ -1623,7 +1653,8 @@ function SignUpPage({ onSignUp, onBackToLogin }) {
 
       <div className="login-left" ref={leftRef}>
         <div className="login-brand"><div className="login-logo-wrap"><div className="login-logo-glow" /><img src="/logo.png" alt="BloodBridge" className="login-brand-logo" /></div><div><span className="login-brand-name">BloodBridge</span><span className="login-brand-tag">AI-POWERED MATCHING</span></div></div>
-        <h1 className="login-headline">Join the<br /><span className="login-headline-accent">lifesaving network.</span></h1>
+        <div className="ecg-pulse-wrap"><ECGPulse /></div>
+        <h1 className="login-headline login-headline-v2">Join the<br /><span className="login-headline-accent">lifesaving network.</span></h1>
         <p className="login-subtitle">Register as a donor and get matched instantly when someone in your city needs your blood type.</p>
         <ul className="login-features">
           {[
@@ -1639,26 +1670,30 @@ function SignUpPage({ onSignUp, onBackToLogin }) {
 
       <div className="login-right">
         <div className="login-card-border" ref={formRef}>
-          <form className="login-card signup-card" onSubmit={handleSubmit} autoComplete="off">
-            <div className="login-card-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> New here</div>
-            <h2 className="login-card-title">Create account</h2>
-            <p className="login-card-subtitle">Start saving lives today</p>
+          <GlowCard className="login-card signup-card">
+            <form onSubmit={handleSubmit} autoComplete="off" style={{ position: 'relative', zIndex: 2 }}>
+              <div className="login-card-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> New here</div>
+              <h2 className="login-card-title">Create account</h2>
+              <p className="login-card-subtitle">Start saving lives today</p>
 
-            <div className="signup-grid">
-              <div className="login-field"><label className="login-label">Full Name</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" name="bb-signup-name" className="login-input" placeholder="Your full name" value={form.name} onChange={set('name')} required autoComplete="off" /></div></div>
-              <div className="login-field"><label className="login-label">Email</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></span><input type="email" name="bb-signup-email" className="login-input" placeholder="you@example.com" value={form.email} onChange={set('email')} required autoComplete="off" /></div></div>
-              <div className="login-field"><label className="login-label">Blood Group</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span><select className="login-input login-select" value={form.bloodGroup} onChange={set('bloodGroup')}>{['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(bg => <option key={bg} value={bg}>{bg}</option>)}</select></div></div>
-              <div className="login-field"><label className="login-label">City</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><select className="login-input login-select" value={form.city} onChange={set('city')} required><option value="">Select city</option>{['Delhi','Mumbai','Bangalore','Chennai','Kolkata','Hyderabad','Pune','Ahmedabad','Jaipur','Lucknow'].map(c => <option key={c} value={c}>{c}</option>)}</select></div></div>
-              <div className="login-field"><label className="login-label">Phone</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><input type="tel" name="bb-signup-phone" className="login-input" placeholder="+91 98765 43210" value={form.phone} onChange={set('phone')} autoComplete="off" /></div></div>
-              <div className="login-field"><label className="login-label">Password</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input type={showPw ? 'text' : 'password'} name="bb-signup-password" className="login-input" placeholder="Min 6 characters" value={form.password} onChange={set('password')} required minLength={6} autoComplete="new-password" /><button type="button" className="login-pw-toggle" onClick={() => setShowPw(!showPw)} tabIndex={-1}>{showPw ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>}</button></div></div>
-            </div>
+              <div className="signup-grid login-fields-stagger">
+                <FloatingInput label="Full Name" name="bb-signup-name" value={form.name} onChange={set('name')} required autoComplete="off" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>} validate={(v) => v.trim().length >= 2 ? null : null} />
+                <FloatingInput label="Email" name="bb-signup-email" type="email" value={form.email} onChange={set('email')} required autoComplete="off" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>} validate={(v) => !v ? null : (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : "That doesn't look like a full email address")} />
+                <div className="login-field"><label className="login-label">Blood Group</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></span><select className="login-input login-select" value={form.bloodGroup} onChange={set('bloodGroup')}>{['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(bg => <option key={bg} value={bg}>{bg}</option>)}</select></div></div>
+                <div className="login-field"><label className="login-label">City</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><select className="login-input login-select" value={form.city} onChange={set('city')} required><option value="">Select city</option>{['Delhi','Mumbai','Bangalore','Chennai','Kolkata','Hyderabad','Pune','Ahmedabad','Jaipur','Lucknow'].map(c => <option key={c} value={c}>{c}</option>)}</select></div></div>
+                <FloatingInput label="Phone" name="bb-signup-phone" type="tel" value={form.phone} onChange={set('phone')} autoComplete="off" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>} validate={(v) => !v ? null : (/^\+?[\d\s-]{10,}$/.test(v) ? null : "Doesn't look like a valid phone number")} />
+                <FloatingInput label="Password" name="bb-signup-password" type={showPw ? 'text' : 'password'} value={form.password} onChange={set('password')} required autoComplete="new-password" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>} validate={(v) => !v ? null : (v.length >= 6 ? null : 'Needs at least 6 characters')} rightSlot={<button type="button" className="login-pw-toggle" onClick={() => setShowPw(!showPw)} tabIndex={-1}>{showPw ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M1 1l22 22"/></svg> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>}</button>} />
+              </div>
 
-            <div className="login-field" style={{marginTop: 4}}><label className="login-label">Confirm Password</label><div className="login-input-wrap"><span className="login-input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><input type="password" name="bb-signup-confirm-password" className="login-input" placeholder="Repeat your password" value={form.confirmPw} onChange={set('confirmPw')} required autoComplete="new-password" /></div></div>
+              <div className="login-fields-stagger" style={{marginTop: 4}}>
+                <FloatingInput label="Confirm Password" name="bb-signup-confirm-password" type="password" value={form.confirmPw} onChange={set('confirmPw')} required autoComplete="new-password" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>} validate={(v) => !v ? null : (v === form.password ? null : "Passwords don't match yet")} />
+              </div>
 
-            {error && <p className="error-msg" style={{marginTop: 8, fontSize: '0.8rem'}}>{error}</p>}
-            <button type="submit" className="login-submit" disabled={loading} style={{marginTop: 12}}>{loading ? (<><span className="spinner" /> Creating account…</>) : (<>Create Account <span className="login-submit-arrow">→</span></>)}</button>
-            <p className="login-footer-text">Already have an account? <button type="button" className="login-link" onClick={onBackToLogin}>Sign in</button></p>
-          </form>
+              {error && <p className="error-msg" style={{marginTop: 8, fontSize: '0.8rem'}}>{error}</p>}
+              <MotionButton type="submit" className="login-submit" disabled={loading} style={{marginTop: 12}}>{loading ? (<><span className="spinner" /> Creating account…</>) : (<>Create Account <span className="login-submit-arrow">→</span></>)}</MotionButton>
+              <p className="login-footer-text">Already have an account? <button type="button" className="login-link" onClick={onBackToLogin}>Sign in</button></p>
+            </form>
+          </GlowCard>
         </div>
       </div>
     </div>
