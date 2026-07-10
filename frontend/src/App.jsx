@@ -5,6 +5,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './index.css'
+import './premium.css'
+import HeroSignature from './components/HeroSignature'
+import PageTransitionV2 from './components/PageTransitionV2'
+import { useLenis } from './hooks/useLenis'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -434,7 +438,7 @@ function generateAIAnalysis(result) {
 // ═══════════════════════════════════════════════
 // PAGE: Dashboard
 // ═══════════════════════════════════════════════
-function DashboardPage({ onSelectStage }) {
+function DashboardPage({ onSelectStage, scrollProgress }) {
   const [health, setHealth] = useState(null)
   const [backendOnline, setBackendOnline] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -561,8 +565,9 @@ function DashboardPage({ onSelectStage }) {
   return (
     <div className="page-content">
       {/* Hero */}
-      <section className="hero">
-        <HeroParticles />
+      <section className="hero hero--v2">
+        <div className="hero-photo-layer" aria-hidden="true" />
+        <HeroSignature scrollProgress={scrollProgress} />
         <div className="container hero-content">
           <div className="hero-badge">
             <span className={`dot ${backendOnline ? '' : loading ? 'connecting' : 'offline'}`} style={loading ? {background: 'var(--blue-400)', boxShadow: '0 0 10px var(--blue-400)'} : {}}></span>
@@ -579,7 +584,7 @@ function DashboardPage({ onSelectStage }) {
               'Backend Offline — Start the server'
             )}
           </div>
-          <h2>
+          <h2 className="hero-headline-v2">
             Where AI Meets<br />
             <span className="gradient-text"><TypeWriter text="Lifesaving Precision" speed={70} /></span>
           </h2>
@@ -1788,6 +1793,7 @@ function ProfilePage({ user, onUpdateUser }) {
 // MAIN APP
 // ═══════════════════════════════════════════════
 export default function App() {
+  const scrollProgress = useLenis()
   const [page, setPage] = useState('login')
   const [user, setUser] = useState(null)
   const [selectedStage, setSelectedStage] = useState(null)
@@ -1797,7 +1803,7 @@ export default function App() {
   const handleSelectStage = (stage) => { setSelectedStage(stage); setPage('stageDetail') }
 
   const pages = {
-    dashboard: <DashboardPage onSelectStage={handleSelectStage} />,
+    dashboard: <DashboardPage onSelectStage={handleSelectStage} scrollProgress={scrollProgress} />,
     stageDetail: <StageDetailPage stage={selectedStage} onBack={() => setPage('dashboard')} />,
     pipeline: <PipelinePage />,
     matching: <MatchingPage />,
@@ -1844,9 +1850,9 @@ export default function App() {
         </div>
       </nav>
 
-      <PageTransition pageKey={page}>
+      <PageTransitionV2 pageKey={page}>
         {pages[page]}
-      </PageTransition>
+      </PageTransitionV2>
 
       <footer className="footer">
         <div classNa  me="container">
