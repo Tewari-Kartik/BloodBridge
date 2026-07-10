@@ -62,33 +62,12 @@ async def lifespan(app: FastAPI):
     print("  [1/5] Preprocessing pipeline loaded")
 
     # Stage 2: Urgency Classifier (Fast Fallback)
+    # Note: We are strictly using the rule-based classifier here because loading a 950MB
+    # Hugging Face Transformer model on a 512MB Render Free Tier instance causes an 
+    # Out-Of-Memory (OOM) freeze, rendering the server completely unresponsive.
     from backend.ml.triage.classifier import RuleBasedUrgencyClassifier
     models.classifier = RuleBasedUrgencyClassifier()
     print("  [2/5] Fast rule-based classifier loaded (temporary)")
-
-    def load_heavy_classifier():
-        """Loads the heavy transformer model in the background to avoid Render timeout."""
-        best_model_dir = "backend/models/urgency_classifier/best_model"
-        hf_token = os.environ.get("HF_TOKEN")
-        hf_repo = "soon007/bloodbridge-urgency-classifier"
-
-        try:
-            from backend.ml.triage.classifier import UrgencyClassifier
-            if hf_token:
-                print(f"  [2.5/5] Fetching classifier from Hugging Face Hub ({hf_repo}) in background...")
-                new_classifier = UrgencyClassifier.load(hf_repo, token=hf_token)
-                models.classifier = new_classifier
-                print("  [2.5/5] 🚀 Background HF load complete! Urgency classifier upgraded.")
-            elif os.path.exists(best_model_dir):
-                print("  [2.5/5] Loading local classifier in background...")
-                new_classifier = UrgencyClassifier.load(best_model_dir)
-                models.classifier = new_classifier
-                print("  [2.5/5] 🚀 Background local load complete! Urgency classifier upgraded.")
-        except Exception as e:
-            print(f"  [2.5/5] WARNING: Background load failed: {e}. Keeping rule-based fallback.")
-
-    import threading
-    threading.Thread(target=load_heavy_classifier, daemon=True).start()
 
     # Stage 3: NER
     from backend.ml.ner.extractor import BloodRequestNER
