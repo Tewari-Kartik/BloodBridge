@@ -1071,6 +1071,33 @@ function MatchingPage() {
     setLoading(false)
   }
 
+  const rankClass = (r) => r === 1 ? 'gold' : r === 2 ? 'silver' : r === 3 ? 'bronze' : 'other'
+
+  // SVG score ring helper
+  const ScoreRing = ({ score }) => {
+    const r = 16, circ = 2 * Math.PI * r
+    const offset = circ - (score * circ)
+    return (
+      <span className="matching-score-ring">
+        <svg width="40" height="40" viewBox="0 0 40 40">
+          <circle className="matching-score-ring-bg" cx="20" cy="20" r={r} fill="none" strokeWidth="3" />
+          <circle className="matching-score-ring-fill" cx="20" cy="20" r={r} fill="none" strokeWidth="3"
+            stroke="url(#scoreGrad)" strokeLinecap="round"
+            strokeDasharray={circ} strokeDashoffset={offset} />
+          <defs>
+            <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="var(--red-400)" />
+              <stop offset="100%" stopColor="var(--teal-400)" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span className="matching-score-num">{(score * 100).toFixed(0)}%</span>
+      </span>
+    )
+  }
+
+  const topDonor = result?.donors?.[0]
+
   return (
     <div className="page-content">
       <section className="section" style={{paddingTop: '120px'}}>
@@ -1107,14 +1134,14 @@ function MatchingPage() {
                 </span>
               )}
               {quickApplied && quickApplied !== 'none' && (
-                <span style={{color:'var(--green-400)', fontSize:'0.78rem'}}>
+                <span style={{color:'var(--teal-400)', fontSize:'0.78rem'}}>
                   Applied{quickApplied.blood_group ? ` · ${quickApplied.blood_group}` : ''}{quickApplied.city ? ` · ${quickApplied.city}` : ''}
                 </span>
               )}
             </div>
           </div>
 
-          <div className="card bb-glow-card" style={{marginBottom: '24px'}}>
+          <div className="card bb-glow-card glow-card" style={{marginBottom: '24px'}}>
             <div className="match-form">
               <div className="form-group">
                 <label>Blood Group Needed</label>
@@ -1135,7 +1162,7 @@ function MatchingPage() {
                 </select>
               </div>
               <button className="btn btn-primary" onClick={search} disabled={loading}>
-                {loading ? 'Searching...' : '🔍 Find Donors'}
+                {loading ? <><span className="spinner"></span> Searching…</> : '🔍 Find Donors'}
               </button>
             </div>
           </div>
@@ -1148,29 +1175,65 @@ function MatchingPage() {
 
           {result && !loading && (
             <>
-              <div className="stats-grid" style={{gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '24px'}}>
-                <Reveal delay={0}><div className="card stat-card bb-glow-card"><div className="stat-value" style={{color:'var(--green-400)'}}>{result.stats?.total_compatible}</div><div className="stat-label">Compatible Donors</div></div></Reveal>
-                <Reveal delay={0.1}><div className="card stat-card bb-glow-card"><div className="stat-value" style={{color:'var(--red-400)'}}>{result.stats?.exact_match_available}</div><div className="stat-label">Exact Match</div></div></Reveal>
-                <Reveal delay={0.2}><div className="card stat-card bb-glow-card"><div className="stat-value" style={{color:'var(--blue-400)'}}>{result.stats?.compatible_groups?.join(', ')}</div><div className="stat-label">Compatible Groups</div></div></Reveal>
+              {/* Filter summary */}
+              <div className="matching-filter-summary">
+                <span>Showing results for</span>
+                <span className="matching-filter-tag">{form.blood_group}</span>
+                <span className="matching-filter-tag">{form.hospital}</span>
+                <span className="matching-filter-tag urgency">{form.urgency.replace('_', ' ')}</span>
               </div>
+
+              {/* Stats */}
+              <div className="stats-grid" style={{gridTemplateColumns: 'repeat(3, 1fr)', marginBottom: '24px'}}>
+                <Reveal delay={0}><div className="card stat-card bb-glow-card"><div className="stat-icon" style={{color:'var(--teal-400)'}}>👥</div><div className="stat-value" style={{color:'var(--teal-400)'}}><AnimCount value={result.stats?.total_compatible || 0} delay={0.2} /></div><div className="stat-label">Compatible Donors</div></div></Reveal>
+                <Reveal delay={0.1}><div className="card stat-card bb-glow-card"><div className="stat-icon" style={{color:'var(--red-400)'}}>🎯</div><div className="stat-value" style={{color:'var(--red-400)'}}>{result.stats?.exact_match_available}</div><div className="stat-label">Exact Match</div></div></Reveal>
+                <Reveal delay={0.2}><div className="card stat-card bb-glow-card"><div className="stat-icon" style={{color:'var(--blue-400)'}}>🩸</div><div className="stat-value" style={{color:'var(--blue-400)'}}>{result.stats?.compatible_groups?.join(', ')}</div><div className="stat-label">Compatible Groups</div></div></Reveal>
+              </div>
+
+              {/* Top match spotlight */}
+              {topDonor && (
+                <Reveal>
+                  <div className="matching-spotlight result-card-flow">
+                    <div className="matching-spotlight-rank">1</div>
+                    <div className="matching-spotlight-info">
+                      <div className="matching-spotlight-name">{topDonor.name}</div>
+                      <div className="matching-spotlight-meta">
+                        <span className="matching-spotlight-pill blood">{topDonor.blood_group}</span>
+                        <span className="matching-spotlight-pill">{topDonor.city}</span>
+                        <span className="matching-spotlight-pill teal">{(topDonor.response_rate * 100).toFixed(0)}% response</span>
+                        <span className="matching-spotlight-pill">{topDonor.distance_km} km away</span>
+                      </div>
+                      <div className="matching-spotlight-factors">
+                        <div>Distance: <span>{topDonor.distance_km} km</span></div>
+                        <div>Donations: <span>{topDonor.total_donations}</span></div>
+                        <div>Response: <span>{(topDonor.response_rate * 100).toFixed(0)}%</span></div>
+                        <div>Last donated: <span>{topDonor.days_since_donation}d ago</span></div>
+                      </div>
+                    </div>
+                    <div className="matching-spotlight-score">
+                      <div className="matching-spotlight-score-value">{(topDonor.match_score * 100).toFixed(1)}%</div>
+                      <div className="matching-spotlight-score-label">Match Score</div>
+                    </div>
+                  </div>
+                </Reveal>
+              )}
+
+              {/* Donor table with enhanced rows */}
               <Reveal delay={0.15}>
-                <div className="card bb-glow-card">
-                  <table className="donor-table">
+                <div className="card bb-glow-card result-card-flow">
+                  <table className="donor-table donor-table-v2">
                     <thead><tr><th>Rank</th><th>Name</th><th>Blood</th><th>City</th><th>Distance</th><th>Response</th><th>Donations</th><th>Score</th></tr></thead>
                     <tbody>
                       {result.donors?.map(d => (
                         <tr key={d.rank}>
-                          <td><span className={`donor-rank ${d.rank > 1 ? 'rank-other' : ''}`}>{d.rank}</span></td>
+                          <td><span className={`matching-rank-badge ${rankClass(d.rank)}`}>{d.rank}</span></td>
                           <td className="donor-name">{d.name}</td>
                           <td><span className="blood-badge">{d.blood_group}</span></td>
                           <td>{d.city}</td>
                           <td>{d.distance_km} km</td>
                           <td>{(d.response_rate * 100).toFixed(0)}%</td>
                           <td>{d.total_donations}</td>
-                          <td>
-                            <span className="score-value">{d.match_score.toFixed(3)}</span>
-                            <span className="score-bar"><span className="score-bar-fill" style={{width:`${d.match_score * 100}%`}}></span></span>
-                          </td>
+                          <td><ScoreRing score={d.match_score} /></td>
                         </tr>
                       ))}
                     </tbody>
