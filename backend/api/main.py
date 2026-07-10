@@ -71,7 +71,6 @@ async def lifespan(app: FastAPI):
         best_model_dir = "backend/models/urgency_classifier/best_model"
         hf_token = os.environ.get("HF_TOKEN")
         hf_repo = "soon007/bloodbridge-urgency-classifier"
-        import os
 
         try:
             from backend.ml.triage.classifier import UrgencyClassifier
