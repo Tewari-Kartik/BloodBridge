@@ -16,19 +16,84 @@
 
 <br/>
 
+[**🌐 Live Demo**](https://blood-bridge-bice.vercel.app/) &nbsp;•&nbsp; [Features](#-key-features) &nbsp;•&nbsp; [Architecture](#-pipeline-at-a-glance) &nbsp;•&nbsp; [Getting Started](#-getting-started) &nbsp;•&nbsp; [API Reference](#-api-reference) &nbsp;•&nbsp; [FAQ](#-faq) &nbsp;•&nbsp; [Contributing](#-contributing)
+
+<br/>
+
 > **BloodBridge** is a real-time, AI-powered emergency blood matching system — a 5-stage ML pipeline that triages requests in milliseconds, extracts critical entities from multilingual messages (Hindi, English, Hinglish), and ranks 50,000 donors using medical compatibility rules and location intelligence.
 
 <br/>
 
----
+<a href="https://blood-bridge-bice.vercel.app/">
+  <img src="https://img.shields.io/badge/🌐_LIVE_DEMO-blood--bridge--bice.vercel.app-CC0000?style=for-the-badge" alt="Live Demo" />
+</a>
+
+<br/><br/>
+
+<!--
+  📸 Add a real screenshot or short GIF of your dashboard here for maximum impact:
+  ![BloodBridge Dashboard](docs/assets/dashboard-preview.png)
+  A visual preview here dramatically increases engagement on GitHub.
+-->
 
 </div>
+
+<br/>
+
+<div align="center">
+
+### 💡 The Problem → The Solution
+
+| ❌ Without BloodBridge | ✅ With BloodBridge |
+|---|---|
+| Manual phone calls to donor lists, one by one | Automated ranking of 50,000 donors in ~1 second |
+| Urgency judged by whoever reads the message first | ML-driven P0–P3 triage with 94.6% critical-case recall |
+| English-only forms that don't match real messages | Native Hindi / English / Hinglish understanding |
+| No visibility into future shortages | Demand forecasting by city and blood type |
+| Blood type matched manually, errors possible | Full medical cross-compatibility rules applied automatically |
+
+</div>
+
+---
+
+## 📖 Table of Contents
+
+- [Why BloodBridge?](#-why-bloodbridge)
+- [Live Demo](#-live-demo)
+- [Pipeline at a Glance](#-pipeline-at-a-glance)
+- [Model Scoreboard](#-model-scoreboard)
+- [Key Features](#-key-features)
+- [Getting Started](#-getting-started)
+- [Docker Deploy](#-one-command-docker-deploy)
+- [API Reference](#-api-reference)
+- [Project Structure](#-project-structure)
+- [ML Design Decisions](#-ml-design-decisions)
+- [Tech Stack](#️-tech-stack)
+- [Use Cases](#-use-cases)
+- [FAQ](#-faq)
+- [Roadmap](#️-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
 
 ## 🩸 Why BloodBridge?
 
 Blood requests arrive in panic — misspelled, code-switched, incomplete. A nurse typing from a crowded ICU won't write clean English. A patient's relative sending a WhatsApp message won't follow a form. BloodBridge was built for the real world: messy, multilingual, urgent.
 
 The pipeline processes a raw blood request message end-to-end in **~1.08 seconds** — from noisy text to a ranked shortlist of compatible, nearby donors ready to be contacted.
+
+In India, blood shortages aren't usually caused by a lack of donors — they're caused by the gap between someone needing blood *right now* and someone able to give it being found *fast enough*. BloodBridge closes that gap with a machine learning pipeline purpose-built for real, unfiltered, multilingual emergency text.
+
+---
+
+## 🌐 Live Demo
+
+BloodBridge is deployed and publicly accessible:
+
+### 👉 **[blood-bridge-bice.vercel.app](https://blood-bridge-bice.vercel.app/)**
+
+Explore the dashboard, submit a sample blood request, and watch the pipeline triage, extract, and match donors in real time.
 
 ---
 
@@ -97,6 +162,20 @@ The pipeline processes a raw blood request message end-to-end in **~1.08 seconds
 
 ---
 
+## ✨ Key Features
+
+- **🌏 Multilingual by design** — Understands Hindi, English, and Hinglish (code-switched text), reflecting how Indian healthcare communication actually happens.
+- **🚨 Life-critical triage** — A 4-class urgency classifier (P0–P3) tuned with weighted cross-entropy specifically so that critical (P0) cases are almost never missed.
+- **🏷️ Precise entity extraction** — Pulls blood group, units required, city, hospital, medical condition, contact number, and date from unstructured, noisy text with 100% accuracy on blood group detection.
+- **🤝 Medically-aware donor ranking** — Goes beyond simple blood-type matching to apply full cross-type compatibility rules, weighted by distance, donor responsiveness, recency of last donation, and rarity of blood group.
+- **📈 Predictive supply planning** — A forecasting model anticipates blood demand by city and blood type, helping blood banks plan inventory proactively instead of reactively.
+- **⚡ Real-time performance** — The full 5-stage pipeline, from raw message to ranked shortlist, completes in about **1.08 seconds**.
+- **🔒 Privacy-conscious** — Phone numbers are automatically masked during preprocessing.
+- **🐳 Production-ready deployment** — Ships with Docker Compose for one-command setup, plus a live hosted demo.
+- **📡 Well-documented REST API** — Every pipeline stage is independently callable via FastAPI, with interactive Swagger docs.
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -135,7 +214,7 @@ uv run python backend/ml/matching/run_matching.py
 uv run python backend/ml/forecasting/run_forecast.py
 ```
 
-### 3 · Run
+### 3 · Run Locally
 
 ```bash
 # Terminal 1 — Backend API (port 8000)
@@ -146,6 +225,8 @@ cd frontend && npm run dev
 ```
 
 Open **http://localhost:5173** 🎉
+
+Or skip local setup entirely and use the **[hosted live demo](https://blood-bridge-bice.vercel.app/)**.
 
 ### 🐳 One-Command Docker Deploy
 
@@ -173,6 +254,8 @@ docker compose up --build
 | `POST` | `/api/match` | Find & rank compatible donors |
 | `POST` | `/api/forecast` | Predict blood demand by city + type |
 | `POST` | `/api/pipeline` | ⚡ Full end-to-end pipeline |
+
+Full interactive documentation (Swagger UI) is available at `/docs` once the backend is running.
 
 ---
 
@@ -233,14 +316,62 @@ XGBoost regressor with 27 engineered features: calendar signals (day, month, wee
 | ML / Ranking | XGBoost · scikit-learn |
 | API | FastAPI · Uvicorn |
 | Frontend | React 19 · Vite |
-| Deployment | Docker · nginx |
+| Deployment | Docker · nginx · Vercel |
 | Packaging | uv (Python) · npm (Node) |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Real-world donor and request data partnerships with blood banks
+- [ ] SMS/WhatsApp bot integration for direct donor notification
+- [ ] Mobile app (React Native) for on-the-go donor response
+- [ ] Expanded regional language support beyond Hindi/English/Hinglish
+- [ ] Live donor availability toggles and push notifications
+- [ ] Integration with hospital inventory management systems
+
+---
+
+## 🎯 Use Cases
+
+- **Hospitals & blood banks** — Plug in the `/api/pipeline` endpoint to auto-triage incoming requests from staff or patient families.
+- **NGOs & volunteer networks** — Use the donor-matching stage to instantly generate a call list ranked by proximity and reliability.
+- **Health-tech platforms** — Integrate the NER and triage stages as microservices inside a larger patient-communication product.
+- **Public health researchers** — Use the forecasting model to study seasonal or regional blood demand patterns.
+
+---
+
+## ❓ FAQ
+
+**Is BloodBridge using real donor or patient data?**
+No — all data (messages, donors, and time-series) is synthetically generated via the scripts in `data/synthetic/`. This keeps the project safe to run, share, and demo without any privacy or medical-data compliance concerns. Swapping in real, consented data would require additional privacy and regulatory review.
+
+**Can BloodBridge send actual notifications to donors?**
+Not yet — today it returns a ranked shortlist via the API/dashboard. SMS/WhatsApp notification integration is on the [roadmap](#️-roadmap).
+
+**Why MuRIL instead of a general-purpose LLM for triage?**
+MuRIL is purpose-built for Indian languages and fine-tunes efficiently on a small labeled dataset, giving fast, cheap, and highly interpretable inference — important for a life-critical classification task where latency and auditability both matter.
+
+**Why regex/gazetteers instead of neural NER?**
+Clinical entities like blood group, phone number, and unit counts follow fairly predictable patterns. A hybrid rule-based approach hits 100% accuracy on blood group extraction while staying fully interpretable and requiring no additional training data — a neural model would add latency and complexity without a clear accuracy gain here.
+
+**What happens if the model misses a P0 (critical) case?**
+The classifier is deliberately tuned with weighted cross-entropy loss to bias toward catching every critical case, achieving 94.6% P0 recall. In a production deployment, this should still sit alongside a human-in-the-loop safety net rather than being fully autonomous.
+
+**Can I run this without a GPU?**
+Yes. Training the MuRIL triage model takes about 5 hours on CPU (vs ~30 minutes on GPU). Inference is fast on CPU either way. Matching and forecasting models train in seconds regardless of hardware.
 
 ---
 
 ## 🤝 Contributing
 
 Pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change. Please make sure to update tests as appropriate.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
@@ -253,6 +384,8 @@ Pull requests are welcome. For major changes, open an issue first to discuss wha
 <div align="center">
 
 **Built to save lives through AI.**
+
+🌐 **[blood-bridge-bice.vercel.app](https://blood-bridge-bice.vercel.app/)**
 
 *If this project helped you or your team, please consider giving it a ⭐*
 
